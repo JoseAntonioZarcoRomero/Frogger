@@ -1,6 +1,7 @@
 /* Variables
 -----------------------------------------------------------------------*/
 var pausa = false, jugando = false;
+var tiempo=0, vidas=3, record = 9999, cronometro;
 
 /* Canvas
 -----------------------------------------------------------------------*/
@@ -10,6 +11,19 @@ var cx = canvas.width/2, cy = canvas.height/2;
 
 /* Funciones
 -----------------------------------------------------------------------*/
+function datosJuego(){
+    ctx.fillStyle = 'blue';
+    ctx.font = "30px monospace";
+    ctx.textAlign = "left";
+    let dato1 = "Tiempo: "+tiempo+"s";
+    ctx.fillText(dato1,40,50);
+    ctx.textAlign = "center";
+    let dato2 = "Vidas: "+vidas;
+    ctx.fillText(dato2,cx,50);
+    let dato3 = "Récord: "+record+"s";
+    ctx.fillText(dato3,670,50);
+    ctx.textAlign = "right";
+}
 function dibujar(){
     if(jugando === false){
         //Interfaz principal
@@ -24,6 +38,7 @@ function dibujar(){
         let txt3 = "Presiona Escape para pausar el juego";
         ctx.font = "30px monospace";
         ctx.fillText(txt3,cx,cy+150);
+        datosJuego();
     } else if(jugando === true){
         if(pausa === true){ 
             //Interfaz en pausa
@@ -33,6 +48,7 @@ function dibujar(){
             //Interfaz juego
             ctx.fillStyle = 'white';
             ctx.fillRect(0,0,canvas.width,canvas.height);
+            datosJuego();
         }
     }
 }
@@ -44,12 +60,28 @@ window.addEventListener("keyup",(evento)=>{
     //Comienza el juego
     if(tecla === "Enter" && jugando === false){
         jugando = true;
+        tiempo = 0;
+        vidas = 3;
+        cronometro = setInterval(()=>{
+            tiempo++;
+            console.log(tiempo);
+            dibujar();
+        },1000);
         console.log(jugando);
         dibujar();
     }
     //Pausa el juego
     if(tecla === " " && jugando === true){
         pausa = (pausa === false) ? true : false;
+        if(pausa === false){
+            cronometro = setInterval(()=>{
+                tiempo++;
+                console.log(tiempo);
+                dibujar();
+            },1000);
+        } else {
+            clearInterval(cronometro);
+        }
         console.log("Pausa: "+pausa);
         dibujar();
     }
