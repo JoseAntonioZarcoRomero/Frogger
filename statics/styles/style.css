@@ -1,9 +1,12 @@
+/* Centrar elementos */
 body{
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
+/* Contorno del canvas */
 #mi-canvas{
     border: 1px solid black;
 }
