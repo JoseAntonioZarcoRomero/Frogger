@@ -20,18 +20,33 @@ class Objetito{
     dibuja(){
         ctx.drawImage(this.img,this.sx,this.sy,this.tx,this.ty,this.x,this.y,this.tx,this.ty);
     }
-    // mover(){
-    // }
-    // walkDown(){
-    // }
-    // walkUp(){
-    // }
-    // walkLeft(){
-    // }
-    // walkRight(){
-    // }
+    ArrowUp(){
+        console.log(this.y);
+        if(this.y>0){
+            this.y -= 50;
+        }
+    }
+    ArrowDown(){
+        console.log(this.y);
+        if(this.y<750){
+            this.y += 50;
+        }
+    }
+    ArrowRight(){
+        console.log(this.x);
+        if(this.x<750){
+            this.x += 50;
+        }
+    }
+    ArrowLeft(){
+        console.log(this.x);
+        if(this.x>0){
+            this.x -= 50;
+        }
+    }
 }
-const fondo = new Objetito(0,0,0,0,"./statics/img/fondo.png",800,800);
+const fondo = new Objetito(0,0,0,0,"./statics/img/fondoimg.jpg",800,800);
+const frog = new Objetito(350,750,0,0,"./statics/img/frog.jpg",50,50);
 
 /* Canvas
 -----------------------------------------------------------------------*/
@@ -79,13 +94,14 @@ function dibujar(){
             //Interfaz juego
             fondo.dibuja();
             datosJuego();
+            frog.dibuja();
         }
     }
 }
 
 /* Eventos
 -----------------------------------------------------------------------*/
-window.addEventListener("keyup",(evento)=>{
+window.addEventListener("keydown",(evento)=>{
     let tecla = evento.key;
     //Comienza el juego
     if(tecla === "Enter" && jugando === false){
@@ -94,7 +110,7 @@ window.addEventListener("keyup",(evento)=>{
         vidas = 3;
         cronometro = setInterval(()=>{
             tiempo++;
-            console.log(tiempo);
+            // console.log(tiempo);
             dibujar();
         },1000);
         console.log(jugando);
@@ -115,5 +131,18 @@ window.addEventListener("keyup",(evento)=>{
         console.log("Pausa: "+pausa);
         dibujar();
     }
+    if(tecla === "ArrowUp" && jugando === true){
+        frog.ArrowUp();
+    }
+    if(tecla === "ArrowDown" && jugando === true){
+        frog.ArrowDown();
+    }
+    if(tecla === "ArrowRight" && jugando === true){
+        frog.ArrowRight();
+    }
+    if(tecla === "ArrowLeft" && jugando === true){
+        frog.ArrowLeft();
+    }
+    // console.log(tecla);
 });
 window.requestAnimationFrame(dibujar);
