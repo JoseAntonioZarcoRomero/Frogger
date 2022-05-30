@@ -201,7 +201,7 @@ function dibujar(){
             fondo.dibuja();
             ctx.fillStyle = 'black';
             ctx.textAlign = "center";
-            let txt1 = "OctoCross";
+            let txt1 = "Frogger";
             ctx.font = "90px fantasy";
             ctx.fillText(txt1,cx,cy-130);
             let txt2 = "Presiona Enter para jugar";
