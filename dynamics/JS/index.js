@@ -7,8 +7,16 @@ var casilla1,casilla2,casilla3,casilla4;
 // Cookie
 let fecha = new Date();
 fecha.setTime(fecha.getTime()+(1000*60)*1440*365);
-var valorCookie = document.cookie;
-valorCookie = valorCookie.split("=");
+function readCokie(){
+    var valorCookie = document.cookie;
+    valorCookie = valorCookie.split("=");
+    if(valorCookie[1] != ""){
+        valorCookie = valorCookie[1];
+    } else {
+        valorCookie = 9999;
+    }
+    return valorCookie
+}
 
 // Clases
 class Objetito{
@@ -82,14 +90,14 @@ class Objetito{
 
 const fondo = new Objetito(0,0,0,0,"./statics/img/fondoFrogger.jpg",800,800,800,800);
 const frog = new Objetito(350,750,0,0,"./statics/img/gatos.png",50,50,50,50);//frog.jpg
-const malo = new Objetito(0,650,50,0,"./statics/img/olas.png",150,50,353,158);
-const malo5 = new Objetito(900,200,-50,0,"./statics/img/olas.png",150,50,353,158);
-const malo6 = new Objetito(900,500,100,0,"./statics/img/olas.png",150,50,353,158);
-const malo2 = new Objetito(800,400,-50,0,"./statics/img/olas.png",100,50,353,158);
+const malo = new Objetito(0,650,.05,0,"./statics/img/olas.png",150,50,353,158);
+const malo5 = new Objetito(900,200,-.05,0,"./statics/img/olas.png",150,50,353,158);
+const malo6 = new Objetito(900,500,.07,0,"./statics/img/olas.png",150,50,353,158);
+const malo2 = new Objetito(800,400,-.05,0,"./statics/img/olas.png",100,50,353,158);
 malo2.sy=180;
-const malo3 = new Objetito(0,300,100,0,"./statics/img/olas.png",50,50,353,158);
+const malo3 = new Objetito(0,300,.07,0,"./statics/img/olas.png",50,50,353,158);
 malo3.sy=363;
-const malo4 = new Objetito(800,600,-100,0,"./statics/img/olas.png",50,50,353,158);
+const malo4 = new Objetito(800,600,-.07,0,"./statics/img/olas.png",50,50,353,158);
 malo4.sy=363;
 const lose = new Audio("./statics/media/audio/lose.mpeg");
 const win = new Audio("./statics/media/audio/win.mpeg");
@@ -243,6 +251,7 @@ function dibujar(){
             }
         }
     }
+    window.requestAnimationFrame(dibujar);
 }
 function ganaste (){
     if(frog.y==50){
@@ -269,7 +278,7 @@ function ganaste (){
     }
     if(casilla1==1&&casilla2==1&&casilla3==1&&casilla4==1){
         document.cookie = "record=" + tiempo + '; expires="' + fecha.toGMTString();//+ '; expires="' + fecha.toGMTString()
-        record = tiempo;
+        record = readCokie();
         clearInterval(cronometro);
         jugando=false;
         fondo.dibuja();
@@ -289,18 +298,10 @@ function ganaste (){
         jugando = false;
         win.volume = .2;
         win.play();
-        casilla1=0;
-        casilla2=0;
-        casilla3=0;
-        casilla4=0;
     }
 }
 
-if(valorCookie[1] != ""){
-    record = valorCookie[1];
-} else {
-    record = 9999;
-}
+record = readCokie();
 
 /* Eventos
 -----------------------------------------------------------------------*/
@@ -314,6 +315,10 @@ window.addEventListener("keydown",(evento)=>{
         frog.y=750;
         perder=false;
         ganar=false;
+        casilla1=0;
+        casilla2=0;
+        casilla3=0;
+        casilla4=0;
     }
     if(tecla === "Enter" && jugando === false && perder == false){
         jugando = true;
@@ -324,17 +329,13 @@ window.addEventListener("keydown",(evento)=>{
         malo.x = 0;
         malo2.x = 800;
         malo3.x = 0;
-        if(valorCookie[1] != ""){
-            record = valorCookie[1];
-        } else {
-            record = 9999;
-        }
+        record = readCokie();
         cronometro = setInterval(()=>{
             tiempo++;
             if(perder==false)
                 dibujar();
         },1000);
-        dibujar();
+        // dibujar();
     }
     //Pausa el juego
     if(tecla === " " && jugando === true && perder == false){
@@ -350,7 +351,7 @@ window.addEventListener("keydown",(evento)=>{
             clearInterval(cronometro);
         }
         console.log("Pausa: "+pausa);
-        dibujar();
+        // dibujar();
     }
     if(tecla === "ArrowUp" && jugando === true && perder == false){
         frog.ArrowUp();
