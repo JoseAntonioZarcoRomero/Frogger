@@ -4,7 +4,7 @@ var pausa = false, jugando = false, perder = false;
 var tiempo=0, vidas=3, record = 9999, cronometro;
 
 class Objetito{
-    constructor(x,y,dx,dy,ruta,tx,ty){
+    constructor(x,y,dx,dy,ruta,tx,ty,txOriginal,tyOriginal){
         const imagen = new Image();
         imagen.src = ruta;
         this.x=x;
@@ -16,98 +16,43 @@ class Objetito{
         this.sx=0;
         this.sy=0;
         this.img = imagen;
+        this.txOriginal = txOriginal;
+        this.tyOriginal = tyOriginal;
     }
     dibuja(){
-        ctx.drawImage(this.img,this.sx,this.sy,this.tx,this.ty,this.x,this.y,this.tx,this.ty);
+        ctx.drawImage(this.img,this.sx,this.sy,this.txOriginal,this.tyOriginal,this.x,this.y,this.tx,this.ty);
     }
     ArrowUp(){
-        // console.log(this.y);
-        // let c1=colision(malo.x,malo.y,malo.tx,malo.ty);
-        // let c2=colision(malo2.x,malo2.y,malo2.tx,malo2.ty);
-        // let c3=colision(malo3.x,malo3.y,malo3.tx,malo3.ty);
-        // if(c1==false && c2==false && c3==false){
-            if(this.y>0){
-                this.y -= 50;
-            }
-        // } else {
-        //     if(vidas>0){
-        //         vidas--;
-        //         this.x=350;
-        //         this.y=750;
-        //         dibujar();
-        //     } else if(vidas==0){
-        //         perdiste();
-        //     }
-        // }
+        if(this.y>0){
+            this.y -= 50;
+            this.sx=100;
+        }
     }
     ArrowDown(){
-        // let c1=colision(malo.x,malo.y,malo.tx,malo.ty);
-        // let c2=colision(malo2.x,malo2.y,malo2.tx,malo2.ty);
-        // let c3=colision(malo3.x,malo3.y,malo3.tx,malo3.ty);
-        // if(c1==false && c2==false && c3==false){
-            if(this.y<750){
-                this.y += 50;
-            }
-        // }else {
-        //     if(vidas>0){
-        //         vidas--;
-        //         this.x=350;
-        //         this.y=750;
-        //         dibujar();
-        //     } else if(vidas==0){
-        //         perdiste();
-        //     }
-        // }
-        // console.log(this.y);
+        if(this.y<750){
+            this.y += 50;
+            this.sx=0;
+        }
     }
     ArrowRight(){
-        // let c1=colision(malo.x,malo.y,malo.tx,malo.ty);
-        // let c2=colision(malo2.x,malo2.y,malo2.tx,malo2.ty);
-        // let c3=colision(malo3.x,malo3.y,malo3.tx,malo3.ty);
-        // if(c1==false && c2==false && c3==false){
-            if(this.x<750){
-                this.x += 50;
-            }
-        // } else {
-        //     if(vidas>0){
-        //         vidas--;
-        //         this.x=350;
-        //         this.y=750;
-        //         dibujar();
-        //     } else {
-        //         perdiste();
-        //     }
-        // }
-        // console.log(this.x);
-        
+        if(this.x<750){
+            this.x += 50;
+            this.sx=180;
+        }
     }
     ArrowLeft(){
-        // let c1=colision(malo.x,malo.y,malo.tx,malo.ty);
-        // let c2=colision(malo2.x,malo2.y,malo2.tx,malo2.ty);
-        // let c3=colision(malo3.x,malo3.y,malo3.tx,malo3.ty);
-        // if(c1==false && c2==false && c3==false){
-            if(this.x>0){
-                this.x -= 50;
-            }
-        // }else {
-        //     if(vidas>0){
-        //         vidas--;
-        //         this.x=350;
-        //         this.y=750;
-        //         dibujar();
-        //     } else if(vidas==0){
-        //         perdiste();
-        //     }
-        // }
-        // console.log(this.x);
+        if(this.x>0){
+            this.x -= 50;
+            this.sx=270;
+        }
     }
     move(){
         let c1=colision(this.x,this.y,this.tx,this.ty);
-        // let c2=colision(malo2.x,malo2.y,malo2.tx,malo2.ty);
-        // let c3=colision(malo3.x,malo3.y,malo3.tx,malo3.ty);
-        if(c1==false){// && c2==false && c3==false
+        if(c1==false){
             this.x += this.dx;
         } else {
+            lose.volume = .2;
+            lose.play();
             frog.x=350;
             frog.y=750;
             if(vidas>1){
@@ -124,11 +69,15 @@ class Objetito{
     }
 }
 
-const fondo = new Objetito(0,0,0,0,"./statics/img/fondoFrogger.jpg",800,800);
-const frog = new Objetito(350,750,0,0,"./statics/img/a.png",50,50);//frog.jpg
-const malo = new Objetito(0,650,50,0,"./statics/img/malo.jpg",150,50);
-const malo2 = new Objetito(800,400,-50,0,"./statics/img/malo.jpg",100,50);
-const malo3 = new Objetito(0,300,100,0,"./statics/img/malo.jpg",50,50);
+const fondo = new Objetito(0,0,0,0,"./statics/img/fondoFrogger.jpg",800,800,800,800);
+const frog = new Objetito(350,750,0,0,"./statics/img/gatos.png",50,50,50,50);//frog.jpg
+const malo = new Objetito(0,650,50,0,"./statics/img/olas.png",150,50,353,158);
+const malo2 = new Objetito(800,400,-50,0,"./statics/img/olas.png",100,50,353,158);
+malo2.sy=180;
+const malo3 = new Objetito(0,300,100,0,"./statics/img/olas.png",50,50,353,158);
+malo3.sy=363;
+const lose = new Audio("./statics/media/audio/lose.mpeg");
+const win = new Audio("./statics/media/audio/win.mpeg");
 
 /* Canvas
 -----------------------------------------------------------------------*/
