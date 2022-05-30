@@ -177,17 +177,32 @@ function dibujar(){
                 //Interfaz juego
                 fondo.dibuja();
                 datosJuego();
+                let xActual=frog.x;
+                let yActual=frog.y;
 
                 if(casilla1==1){
-                    ;
-                } else if(casilla2==1){
-                    ;
-                } else if(casilla3==1){
-                    ;
-                } else if(casilla4==1){
-                    ;
+                    frog.x=100;
+                    frog.y=50;
+                    frog.dibuja();
+                } 
+                if(casilla2==1){
+                    frog.x=300;
+                    frog.y=50;
+                    frog.dibuja();
+                } 
+                if(casilla3==1){
+                    frog.x=450;
+                    frog.y=50;
+                    frog.dibuja();
+                } 
+                if(casilla4==1){
+                    frog.x=600;
+                    frog.y=50;
+                    frog.dibuja();
                 }
 
+                frog.x=xActual;
+                frog.y=yActual;
                 frog.dibuja();
                 dibujaCarro();
             }
@@ -228,8 +243,14 @@ function ganaste (){
         ctx.textAlign = "center";
         ctx.fillStyle = 'blue';
         ctx.fillText("Ganaste!!!",cx,cy);
-        ganar=true;
-        jugando=false;
+        ganar = true;
+        jugando = false;
+        win.volume = .2;
+        win.play();
+        casilla1=0;
+        casilla2=0;
+        casilla3=0;
+        casilla4=0;
     }
 }
 
@@ -305,14 +326,17 @@ window.addEventListener("keydown",(evento)=>{
     }
     if(tecla === "ArrowDown" && jugando === true && perder == false){
         frog.ArrowDown();
+        ganaste();
         console.log(frog.x+","+frog.y);
     }
     if(tecla === "ArrowRight" && jugando === true && perder == false){
         frog.ArrowRight();
+        ganaste();
         console.log(frog.x+","+frog.y);
     }
     if(tecla === "ArrowLeft" && jugando === true && perder == false){
         frog.ArrowLeft();
+        ganaste();
         console.log(frog.x+","+frog.y);
     }
     // console.log(tecla);
