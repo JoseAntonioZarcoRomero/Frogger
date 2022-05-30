@@ -68,6 +68,9 @@ class Objetito{
                 console.log(vidas);
                 dibujar();
             } else {//if(vidas==0)
+                vidas--;
+                console.log(vidas);
+                dibujar();
                 clearInterval(cronometro);
                 jugando=false;
                 perder=true;
@@ -80,10 +83,14 @@ class Objetito{
 const fondo = new Objetito(0,0,0,0,"./statics/img/fondoFrogger.jpg",800,800,800,800);
 const frog = new Objetito(350,750,0,0,"./statics/img/gatos.png",50,50,50,50);//frog.jpg
 const malo = new Objetito(0,650,50,0,"./statics/img/olas.png",150,50,353,158);
+const malo5 = new Objetito(900,200,-50,0,"./statics/img/olas.png",150,50,353,158);
+const malo6 = new Objetito(900,500,100,0,"./statics/img/olas.png",150,50,353,158);
 const malo2 = new Objetito(800,400,-50,0,"./statics/img/olas.png",100,50,353,158);
 malo2.sy=180;
 const malo3 = new Objetito(0,300,100,0,"./statics/img/olas.png",50,50,353,158);
 malo3.sy=363;
+const malo4 = new Objetito(800,600,-100,0,"./statics/img/olas.png",50,50,353,158);
+malo4.sy=363;
 const lose = new Audio("./statics/media/audio/lose.mpeg");
 const win = new Audio("./statics/media/audio/win.mpeg");
 
@@ -96,11 +103,18 @@ var cx = canvas.width/2, cy = canvas.height/2;
 /* Funciones
 -----------------------------------------------------------------------*/
 function perdiste(){
-    ctx.fillStyle = "white";
-    ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle = 'black';
     ctx.textAlign = "center";
-    ctx.fillStyle = 'blue';
-    ctx.fillText("Perdiste :(",cx,cy);
+    let txt1 = "Perdiste :(";
+    ctx.font = "90px fantasy";
+    ctx.fillText(txt1,cx,cy-130);
+    let txt2 = "Presiona Enter para jugar";
+    ctx.font = "50px monospace";
+    ctx.fillText(txt2,cx,cy+10);
+    let txt3 = "Presiona Escape para pausar el juego";
+    ctx.font = "30px monospace";
+    ctx.fillText(txt3,cx,cy+150);
+    datosJuego();
 }
 function colision(x1,y1,w1,h1){
     let colision;
@@ -135,6 +149,27 @@ function dibujaCarro(){
         malo3.move();
         if(malo3.x+malo3.tx>800){
             malo3.x=0;
+        }
+    }
+    if(perder===false){
+        malo4.dibuja();
+        malo4.move();
+        if(malo4.x+malo4.tx<0){
+            malo4.x=800;
+        }
+    }
+    if(perder===false){
+        malo5.dibuja();
+        malo5.move();
+        if(malo5.x+malo5.tx<0){
+            malo5.x=800;
+        }
+    }
+    if(perder===false){
+        malo6.dibuja();
+        malo6.move();
+        if(malo6.x+malo6.tx>800){
+            malo6.x=(-100);
         }
     }
 }
@@ -233,16 +268,23 @@ function ganaste (){
         }
     }
     if(casilla1==1&&casilla2==1&&casilla3==1&&casilla4==1){
-        document.cookie = 'record=' + tiempo + '; expires="' + fecha.toGMTString();
+        document.cookie = "record=" + tiempo + '; expires="' + fecha.toGMTString();//+ '; expires="' + fecha.toGMTString()
         record = tiempo;
         clearInterval(cronometro);
-        // jugando=false;
-        console.log("Ganaste");
-        ctx.fillStyle = "white";
-        ctx.fillRect(0,0,canvas.width,canvas.height);
+        jugando=false;
+        fondo.dibuja();
+        ctx.fillStyle = 'black';
         ctx.textAlign = "center";
-        ctx.fillStyle = 'blue';
-        ctx.fillText("Ganaste!!!",cx,cy);
+        let txt1 = "Ganaste!!!";
+        ctx.font = "90px fantasy";
+        ctx.fillText(txt1,cx,cy-130);
+        let txt2 = "Presiona Enter para jugar";
+        ctx.font = "50px monospace";
+        ctx.fillText(txt2,cx,cy+10);
+        let txt3 = "Presiona Escape para pausar el juego";
+        ctx.font = "30px monospace";
+        ctx.fillText(txt3,cx,cy+150);
+        datosJuego();
         ganar = true;
         jugando = false;
         win.volume = .2;
@@ -256,6 +298,8 @@ function ganaste (){
 
 if(valorCookie[1] != ""){
     record = valorCookie[1];
+} else {
+    record = 9999;
 }
 
 /* Eventos
@@ -263,25 +307,11 @@ if(valorCookie[1] != ""){
 window.requestAnimationFrame(dibujar);
 window.addEventListener("keydown",(evento)=>{
     let tecla = evento.key;
-    //Comienza el juego
     if(tecla === "Enter" && jugando === false && (perder === true||ganar==true)){
         tiempo = 0;
         vidas = 3;
         frog.x=350;
         frog.y=750;
-        fondo.dibuja();
-        ctx.fillStyle = 'black';
-        ctx.textAlign = "center";
-        let txt1 = "OctoCross";
-        ctx.font = "90px fantasy";
-        ctx.fillText(txt1,cx,cy-130);
-        let txt2 = "Presiona Enter para jugar";
-        ctx.font = "50px monospace";
-        ctx.fillText(txt2,cx,cy+10);
-        let txt3 = "Presiona Escape para pausar el juego";
-        ctx.font = "30px monospace";
-        ctx.fillText(txt3,cx,cy+150);
-        datosJuego();
         perder=false;
         ganar=false;
     }
@@ -294,13 +324,16 @@ window.addEventListener("keydown",(evento)=>{
         malo.x = 0;
         malo2.x = 800;
         malo3.x = 0;
+        if(valorCookie[1] != ""){
+            record = valorCookie[1];
+        } else {
+            record = 9999;
+        }
         cronometro = setInterval(()=>{
             tiempo++;
-            // console.log(tiempo);
             if(perder==false)
                 dibujar();
         },1000);
-        // console.log(jugando);
         dibujar();
     }
     //Pausa el juego
@@ -339,5 +372,4 @@ window.addEventListener("keydown",(evento)=>{
         ganaste();
         console.log(frog.x+","+frog.y);
     }
-    // console.log(tecla);
 });
