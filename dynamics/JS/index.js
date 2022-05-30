@@ -1,8 +1,16 @@
 /* Variables
 -----------------------------------------------------------------------*/
-var pausa = false, jugando = false, perder = false;
+var pausa = false, jugando = false, perder = false, ganar=false;
 var tiempo=0, vidas=3, record = 9999, cronometro;
+var casilla1,casilla2,casilla3,casilla4;
 
+// Cookie
+let fecha = new Date();
+fecha.setTime(fecha.getTime()+(1000*60)*1440*365);
+var valorCookie = document.cookie;
+valorCookie = valorCookie.split("=");
+
+// Clases
 class Objetito{
     constructor(x,y,dx,dy,ruta,tx,ty,txOriginal,tyOriginal){
         const imagen = new Image();
@@ -169,19 +177,73 @@ function dibujar(){
                 //Interfaz juego
                 fondo.dibuja();
                 datosJuego();
+
+                if(casilla1==1){
+                    ;
+                } else if(casilla2==1){
+                    ;
+                } else if(casilla3==1){
+                    ;
+                } else if(casilla4==1){
+                    ;
+                }
+
                 frog.dibuja();
                 dibujaCarro();
             }
         }
     }
 }
+function ganaste (){
+    if(frog.y==50){
+        if(frog.x==100){
+            frog.x=350;
+            frog.y=750;
+            casilla1=1;
+        }
+        if(frog.x==300){
+            frog.x=350;
+            frog.y=750;
+            casilla2=1;
+        }
+        if(frog.x==450){
+            frog.x=350;
+            frog.y=750;
+            casilla3=1;
+        }
+        if(frog.x==600){
+            frog.x=350;
+            frog.y=750;
+            casilla4=1;
+        }
+    }
+    if(casilla1==1&&casilla2==1&&casilla3==1&&casilla4==1){
+        document.cookie = 'record=' + tiempo + '; expires="' + fecha.toGMTString();
+        record = tiempo;
+        clearInterval(cronometro);
+        // jugando=false;
+        console.log("Ganaste");
+        ctx.fillStyle = "white";
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.textAlign = "center";
+        ctx.fillStyle = 'blue';
+        ctx.fillText("Ganaste!!!",cx,cy);
+        ganar=true;
+        jugando=false;
+    }
+}
+
+if(valorCookie[1] != ""){
+    record = valorCookie[1];
+}
 
 /* Eventos
 -----------------------------------------------------------------------*/
+window.requestAnimationFrame(dibujar);
 window.addEventListener("keydown",(evento)=>{
     let tecla = evento.key;
     //Comienza el juego
-    if(tecla === "Enter" && jugando === false && perder === true){
+    if(tecla === "Enter" && jugando === false && (perder === true||ganar==true)){
         tiempo = 0;
         vidas = 3;
         frog.x=350;
@@ -200,6 +262,7 @@ window.addEventListener("keydown",(evento)=>{
         ctx.fillText(txt3,cx,cy+150);
         datosJuego();
         perder=false;
+        ganar=false;
     }
     if(tecla === "Enter" && jugando === false && perder == false){
         jugando = true;
@@ -237,16 +300,20 @@ window.addEventListener("keydown",(evento)=>{
     }
     if(tecla === "ArrowUp" && jugando === true && perder == false){
         frog.ArrowUp();
+        ganaste();
+        console.log(frog.x+","+frog.y);
     }
     if(tecla === "ArrowDown" && jugando === true && perder == false){
         frog.ArrowDown();
+        console.log(frog.x+","+frog.y);
     }
     if(tecla === "ArrowRight" && jugando === true && perder == false){
         frog.ArrowRight();
+        console.log(frog.x+","+frog.y);
     }
     if(tecla === "ArrowLeft" && jugando === true && perder == false){
         frog.ArrowLeft();
+        console.log(frog.x+","+frog.y);
     }
     // console.log(tecla);
 });
-window.requestAnimationFrame(dibujar);
